@@ -1,8 +1,28 @@
 import numpy as np
 import cv2
+import argparse
+
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import load_model
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--video',
+                    default=None,
+                    type=str,
+                    help="Input Video")
+parser.add_argument('--camera',
+                    default=0,
+                    type=int,
+                    help="Camera Index")
+args = parser.parse_args()
+
+input_video = None
+if args.video == None:
+    input_video = args.camera
+else:
+    input_video = args.video
 
 
 if __name__ == '__main__':
@@ -25,11 +45,9 @@ if __name__ == '__main__':
     model = load_model('./save_models/keyPointNet.h5')
 
     """Input Video"""
-    input_cam = 'ankle_data/videos/ankle01.mp4'
-    # input_cam = 'test.mp4'
-    cap = cv2.VideoCapture(input_cam)
+    cap = cv2.VideoCapture(input_video)
     if cap.isOpened() == False:
-        print('ERROR, Can\'t open the VIDEO({0})'.format(str(input_cam)))
+        print('ERROR, Can\'t open the VIDEO({0})'.format(str(input_video)))
         exit()
 
     while(cap.isOpened()):
